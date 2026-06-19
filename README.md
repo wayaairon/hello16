@@ -51,9 +51,20 @@ photos: [
 3. 网站已加入 `noindex, nofollow` 和 `robots.txt`，但这只能降低被搜索引擎收录的概率，不能保证绝对私密。
 4. 真正只给家人看，建议启用平台访问保护或密码保护。
 
+## 访客上传和留言
+
+网站现在支持浏览者上传照片和提交留言。线上写入数据需要 Vercel Blob：
+
+1. 在 Vercel 项目里创建并连接 Blob Store。
+2. 确认项目环境变量里有 `BLOB_READ_WRITE_TOKEN`。
+3. 设置 `HELLO16_WRITE_KEY`，作为上传照片和提交留言的写入口令。
+4. 如果希望家人只记一个口令，可以把 `HELLO16_WRITE_KEY` 设置成和 `config.js` 里的 `passcode` 一样。
+
+前端会把照片压缩到 4MB 以内再上传。新上传的照片和新留言会存到 Vercel Blob，不需要修改 GitHub 仓库。
+
 ## 部署到 Vercel
 
-这个网站是纯静态项目，Vercel 不需要构建命令。
+这个网站是静态页面 + Vercel Functions 项目，Vercel 不需要构建命令。
 
 网页端上传：
 

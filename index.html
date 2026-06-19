@@ -35,6 +35,7 @@
     <button class="menu-btn" id="menuBtn" aria-label="展开导航">☰</button>
     <nav class="nav" id="nav">
       <a href="#album">16 的成长相册</a>
+      <a href="#photoUpload">上传照片</a>
       <a href="#messages">家人留言</a>
     </nav>
   </header>
@@ -85,6 +86,20 @@
         <p class="eyebrow">photo album</p>
         <h2>16 的成长相册</h2>
       </div>
+      <form class="contribute-panel upload-form" id="photoUploadForm">
+        <div>
+          <p class="eyebrow">upload</p>
+          <h3 id="photoUpload">上传照片</h3>
+        </div>
+        <div class="form-row">
+          <label class="file-picker" for="photoInput">
+            <span>选择照片</span>
+            <input id="photoInput" name="photo" type="file" accept="image/*" multiple />
+          </label>
+          <button class="btn primary" type="submit">上传</button>
+        </div>
+        <p class="form-status" id="photoUploadStatus" aria-live="polite"></p>
+      </form>
       <div class="album-grid" id="albumGrid"></div>
     </section>
 
@@ -98,6 +113,22 @@
         <h2>写给 16 的话</h2>
         <p>希望这些话，未来的 16 也能读到。</p>
       </div>
+      <form class="contribute-panel message-form" id="messageForm">
+        <div class="message-fields">
+          <label>
+            <span>称呼</span>
+            <input id="messageFrom" name="from" type="text" maxlength="20" placeholder="小姨" />
+          </label>
+          <label>
+            <span>留言</span>
+            <textarea id="messageText" name="text" maxlength="500" rows="4" required></textarea>
+          </label>
+        </div>
+        <div class="form-row end">
+          <button class="btn primary" type="submit">提交留言</button>
+        </div>
+        <p class="form-status" id="messageStatus" aria-live="polite"></p>
+      </form>
       <div class="message-grid" id="messageGrid"></div>
     </section>
   </main>
