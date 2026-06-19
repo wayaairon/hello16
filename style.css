@@ -154,9 +154,15 @@ button, input { font: inherit; }
   font-weight: 400;
   font-size: clamp(72px, 13vw, 150px);
   line-height: 0.92;
-  letter-spacing: -0.04em;
+  letter-spacing: 0;
+  text-align: center;
 }
-.hero h1 span { color: #6599bd; }
+.hero h1 span {
+  display: block;
+  margin-top: 0.08em;
+  color: #6599bd;
+  text-align: center;
+}
 .lead {
   margin: 28px 0 0;
   max-width: 670px;
