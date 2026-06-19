@@ -16,7 +16,7 @@ function initBasics() {
   document.title = `${config.siteName || "hello16"}｜${config.nickname || "16"} 的成长记录`;
   $("#childName").textContent = config.childName || "曾洲宁";
   $("#nickname").textContent = config.nickname || "16";
-  $("#birthDate").textContent = config.birthDate || "待填写";
+  $("#birthDate").textContent = config.birthDate || "";
   $("#heroPhoto").src = config.heroPhoto || "images/cover.svg";
   $("#year").textContent = new Date().getFullYear();
 }
@@ -38,7 +38,7 @@ function initLock() {
       lockScreen.classList.add("hidden");
       return;
     }
-    hint.textContent = "口令不对，再试一次。第一版默认口令是 hello16。";
+    hint.textContent = "口令不对，再试一次。";
     hint.classList.add("error");
   };
 
@@ -48,10 +48,10 @@ function initLock() {
   });
 }
 
-function openPhoto(src, caption) {
+function openPhoto(src, altText) {
   const dialog = $("#photoDialog");
   $("#dialogImage").src = src;
-  $("#dialogCaption").textContent = caption || "16 的成长照片";
+  $("#dialogImage").alt = altText || "照片预览";
   if (typeof dialog.showModal === "function") dialog.showModal();
 }
 
@@ -73,7 +73,7 @@ function renderTimeline() {
         <h3>${escapeHtml(item.title)}</h3>
         <p>${escapeHtml(item.text)}</p>
       </div>
-      <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" data-caption="${escapeHtml(item.title)}" />
+      <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" data-preview />
     </article>
   `).join("");
 }
@@ -82,12 +82,11 @@ function renderAlbums() {
   const grid = $("#albumGrid");
   grid.innerHTML = (config.albums || []).map((album) => `
     <article class="album-card">
-      <img src="${escapeHtml(album.cover)}" alt="${escapeHtml(album.name)}" data-caption="${escapeHtml(album.name)}" />
+      <img src="${escapeHtml(album.cover)}" alt="${escapeHtml(album.name)}" data-preview />
       <div class="album-card-body">
         <h3>${escapeHtml(album.name)}</h3>
-        <p>${escapeHtml(album.desc)}</p>
         <div class="mini-photos">
-          ${(album.photos || []).map((photo, idx) => `<img src="${escapeHtml(photo)}" alt="${escapeHtml(album.name)}照片 ${idx + 1}" data-caption="${escapeHtml(album.name)}" />`).join("")}
+          ${(album.photos || []).map((photo, idx) => `<img src="${escapeHtml(photo)}" alt="${escapeHtml(album.name)}照片 ${idx + 1}" data-preview />`).join("")}
         </div>
       </div>
     </article>
@@ -98,7 +97,7 @@ function renderBirthday() {
   const item = (config.birthdays || [])[0];
   if (!item) return;
   $("#birthdayCard").innerHTML = `
-    <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" data-caption="${escapeHtml(item.title)}" />
+    <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" data-preview />
     <div>
       <span class="birthday-badge">${escapeHtml(item.age)}</span>
       <h2>生日记录</h2>
@@ -121,9 +120,9 @@ function renderMessages() {
 
 function initPhotoClicks() {
   document.body.addEventListener("click", (event) => {
-    const img = event.target.closest("img[data-caption]");
+    const img = event.target.closest("img[data-preview]");
     if (!img) return;
-    openPhoto(img.getAttribute("src"), img.dataset.caption);
+    openPhoto(img.getAttribute("src"), img.getAttribute("alt"));
   });
 }
 

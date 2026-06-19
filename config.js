@@ -42,19 +42,16 @@ window.HELLO16_CONFIG = {
   albums: [
     {
       name: "日常可爱",
-      desc: "那些没有特别事件、但特别可爱的瞬间。",
       cover: "images/photo-05.svg",
       photos: ["images/photo-05.svg", "images/photo-06.svg", "images/photo-07.svg"]
     },
     {
       name: "生日记录",
-      desc: "蛋糕、蜡烛、拥抱，还有一年一年长大的 16。",
       cover: "images/photo-08.svg",
       photos: ["images/photo-08.svg", "images/photo-09.svg", "images/photo-10.svg"]
     },
     {
       name: "和家人在一起",
-      desc: "被爱包围的每一天，都值得收藏。",
       cover: "images/photo-11.svg",
       photos: ["images/photo-11.svg", "images/photo-12.svg", "images/photo-13.svg"]
     }

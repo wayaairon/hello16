@@ -20,10 +20,10 @@
       <p>这是 16 的成长小网站，只给家人查看。</p>
       <label for="passcodeInput">输入家人访问口令</label>
       <div class="lock-row">
-        <input id="passcodeInput" type="password" placeholder="默认：hello16" autocomplete="current-password" />
+        <input id="passcodeInput" type="password" autocomplete="current-password" />
         <button id="unlockBtn" type="button">进入</button>
       </div>
-      <p class="lock-hint" id="lockHint">提示：第一版默认口令是 hello16，后续可以在 config.js 里修改。</p>
+      <p class="lock-hint" id="lockHint" aria-live="polite"></p>
     </div>
   </div>
 
@@ -62,12 +62,12 @@
           </div>
           <div>
             <small>出生日期</small>
-            <strong id="birthDate">待填写</strong>
+            <strong id="birthDate"></strong>
           </div>
         </div>
       </div>
       <div class="hero-photo-wrap">
-        <img id="heroPhoto" class="hero-photo" src="images/cover.svg" alt="16 的照片占位图" />
+        <img id="heroPhoto" class="hero-photo" src="images/cover.svg" alt="16 的照片" />
         <div class="sticker sticker-one">慢慢长大</div>
         <div class="sticker sticker-two">被爱收藏</div>
       </div>
@@ -111,7 +111,6 @@
       <div class="section-heading">
         <p class="eyebrow">photo album</p>
         <h2>照片相册</h2>
-        <p>现在先放占位图。后续把 images 文件夹里的图片替换成真实照片即可。</p>
       </div>
       <div class="album-grid" id="albumGrid"></div>
     </section>
@@ -138,7 +137,6 @@
   <dialog class="photo-dialog" id="photoDialog">
     <button class="dialog-close" id="dialogClose" type="button" aria-label="关闭照片预览">×</button>
     <img id="dialogImage" src="" alt="照片预览" />
-    <p id="dialogCaption"></p>
   </dialog>
 
   <script src="config.js"></script>

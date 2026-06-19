@@ -294,9 +294,8 @@ button, input { font: inherit; }
   border-radius: var(--radius-lg);
 }
 .album-card img { width: 100%; aspect-ratio: 1.12 / 1; object-fit: cover; cursor: zoom-in; }
-.album-card-body { padding: 22px; }
-.album-card h3 { margin: 0 0 8px; font-size: 24px; }
-.album-card p { margin: 0 0 16px; color: var(--muted); line-height: 1.75; }
+.album-card-body { padding: 20px 22px 22px; }
+.album-card h3 { margin: 0 0 16px; font-size: 24px; }
 .mini-photos { display: flex; gap: 8px; }
 .mini-photos img { width: 52px; height: 52px; border-radius: 14px; object-fit: cover; cursor: zoom-in; }
 
@@ -345,7 +344,6 @@ button, input { font: inherit; }
 }
 .photo-dialog::backdrop { background: rgba(60,51,45,0.34); backdrop-filter: blur(4px); }
 .photo-dialog img { width: 100%; max-height: 72vh; object-fit: contain; background: #fff; }
-.photo-dialog p { margin: 0; padding: 16px 22px 22px; color: var(--muted); }
 .dialog-close {
   position: absolute;
   top: 12px;
