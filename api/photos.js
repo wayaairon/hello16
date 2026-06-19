@@ -17,6 +17,10 @@ function expectedWriteKey() {
   return process.env.HELLO16_WRITE_KEY || "";
 }
 
+function blobToken() {
+  return process.env.BLOB_READ_WRITE_TOKEN || process.env.HELLO16_BLOB_READ_WRITE_TOKEN || "";
+}
+
 function isAuthorized(request, bodyKey = "") {
   const expected = expectedWriteKey();
   if (!expected) return false;
@@ -42,7 +46,8 @@ async function listAllUploadedPhotos() {
     const page = await list({
       prefix: PHOTO_PREFIX,
       limit: 1000,
-      cursor
+      cursor,
+      token: blobToken()
     });
 
     photos.push(...page.blobs);
@@ -76,6 +81,10 @@ export async function POST(request) {
     const form = await request.formData();
     const photo = form.get("photo");
 
+    if (!blobToken()) {
+      return json({ error: "Blob 读写 token 还没有配置。" }, 503);
+    }
+
     if (!expectedWriteKey()) {
       return json({ error: "上传口令还没有配置。" }, 503);
     }
@@ -101,7 +110,8 @@ export async function POST(request) {
     const pathname = `${PHOTO_PREFIX}${date}/${Date.now()}-${randomId()}.${ext}`;
     const blob = await put(pathname, photo, {
       access: "public",
-      addRandomSuffix: true
+      addRandomSuffix: true,
+      token: blobToken()
     });
 
     return json({

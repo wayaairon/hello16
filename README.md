@@ -60,6 +60,8 @@ photos: [
 3. 设置 `HELLO16_WRITE_KEY`，作为上传照片和提交留言的写入口令。
 4. 如果希望家人只记一个口令，可以把 `HELLO16_WRITE_KEY` 设置成和 `config.js` 里的 `passcode` 一样。
 
+如果连接 Blob Store 时提示 `BLOB_STORE_ID` 已存在，可以把 Custom Environment Variable Prefix 改成 `HELLO16_BLOB`。这种情况下 Vercel 会创建 `HELLO16_BLOB_READ_WRITE_TOKEN`，网站也会自动读取这个变量。
+
 前端会把照片压缩到 4MB 以内再上传。新上传的照片和新留言会存到 Vercel Blob，不需要修改 GitHub 仓库。
 
 ## 部署到 Vercel

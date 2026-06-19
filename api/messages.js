@@ -17,6 +17,10 @@ function expectedWriteKey() {
   return process.env.HELLO16_WRITE_KEY || "";
 }
 
+function blobToken() {
+  return process.env.BLOB_READ_WRITE_TOKEN || process.env.HELLO16_BLOB_READ_WRITE_TOKEN || "";
+}
+
 function isAuthorized(request, bodyKey = "") {
   const expected = expectedWriteKey();
   if (!expected) return false;
@@ -40,7 +44,8 @@ async function listAllMessages() {
     const page = await list({
       prefix: MESSAGE_PREFIX,
       limit: 1000,
-      cursor
+      cursor,
+      token: blobToken()
     });
 
     blobs.push(...page.blobs);
@@ -81,6 +86,10 @@ export async function POST(request) {
   try {
     const body = await request.json();
 
+    if (!blobToken()) {
+      return json({ error: "Blob 读写 token 还没有配置。" }, 503);
+    }
+
     if (!expectedWriteKey()) {
       return json({ error: "留言口令还没有配置。" }, 503);
     }
@@ -107,7 +116,8 @@ export async function POST(request) {
 
     await put(pathname, JSON.stringify(message), {
       access: "public",
-      addRandomSuffix: false
+      addRandomSuffix: false,
+      token: blobToken()
     });
 
     return json({ message }, 201);
