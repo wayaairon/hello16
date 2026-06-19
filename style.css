@@ -233,25 +233,17 @@ button, input { font: inherit; }
   font-weight: 400;
 }
 .section-heading p:not(.eyebrow) { margin: 0; color: var(--muted); line-height: 1.9; font-size: 17px; }
-.feature-grid, .album-grid, .message-grid {
+.album-grid, .message-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
 }
-.feature-card, .album-card, .message-card, .timeline-item, .birthday-card {
+.album-card, .message-card, .timeline-item, .birthday-card {
   border: 1px solid rgba(255,255,255,0.82);
   background: rgba(255,255,255,0.62);
   box-shadow: 0 18px 46px rgba(80, 58, 36, 0.08);
   backdrop-filter: blur(10px);
 }
-.feature-card {
-  min-height: 190px;
-  padding: 28px;
-  border-radius: var(--radius-lg);
-}
-.feature-card span { font-size: 34px; }
-.feature-card h3 { margin: 18px 0 8px; font-size: 24px; }
-.feature-card p { margin: 0; color: var(--muted); line-height: 1.75; }
 
 .timeline { position: relative; display: grid; gap: 20px; }
 .timeline::before {
@@ -373,7 +365,7 @@ button, input { font: inherit; }
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; margin-top: 58px; gap: 38px; }
   .hero-photo-wrap { max-width: 520px; margin: 0 auto; }
-  .feature-grid, .album-grid, .message-grid { grid-template-columns: 1fr; }
+  .album-grid, .message-grid { grid-template-columns: 1fr; }
   .timeline-item { grid-template-columns: 58px 1fr; }
   .timeline-item img { grid-column: 2; width: 100%; height: auto; aspect-ratio: 4 / 3; }
   .birthday-card { grid-template-columns: 1fr; }
