@@ -50,7 +50,10 @@ function initLock() {
   const hint = $("#lockHint");
   const expected = config.passcode || "hello16";
 
-  if (sessionStorage.getItem("hello16-unlocked") === "yes") {
+  if (
+    sessionStorage.getItem("hello16-unlocked") === "yes" &&
+    sessionStorage.getItem("hello16-write-key")
+  ) {
     lockScreen.classList.add("hidden");
   }
 
