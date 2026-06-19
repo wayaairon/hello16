@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="hello16 - 曾洲宁小朋友的成长记录" />
+  <title>hello16｜16 的成长记录</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="lock-screen" id="lockScreen" aria-label="访问验证">
+    <div class="lock-card">
+      <div class="lock-icon">☁️</div>
+      <p class="eyebrow">family only</p>
+      <h1>欢迎来到 hello16</h1>
+      <p>这是 16 的成长小网站，只给家人查看。</p>
+      <label for="passcodeInput">输入家人访问口令</label>
+      <div class="lock-row">
+        <input id="passcodeInput" type="password" placeholder="默认：hello16" autocomplete="current-password" />
+        <button id="unlockBtn" type="button">进入</button>
+      </div>
+      <p class="lock-hint" id="lockHint">提示：第一版默认口令是 hello16，后续可以在 config.js 里修改。</p>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <a class="logo" href="#home" aria-label="hello16 首页">
+      <span class="logo-dot">16</span>
+      <span>hello16</span>
+    </a>
+    <button class="menu-btn" id="menuBtn" aria-label="展开导航">☰</button>
+    <nav class="nav" id="nav">
+      <a href="#timeline">成长时间线</a>
+      <a href="#album">照片相册</a>
+      <a href="#birthday">生日记录</a>
+      <a href="#messages">家人留言</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow">曾洲宁 · 小名 16</p>
+        <h1>你好呀，<span>16</span></h1>
+        <p class="lead">这里记录曾洲宁小朋友慢慢长大的每一天。每一次笑、每一次奔跑、每一个被家人记住的小瞬间，都会被好好收藏在这里。</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#timeline">看成长时间线</a>
+          <a class="btn ghost" href="#album">看照片相册</a>
+        </div>
+        <div class="info-strip" aria-label="基本信息">
+          <div>
+            <small>名字</small>
+            <strong id="childName">曾洲宁</strong>
+          </div>
+          <div>
+            <small>小名</small>
+            <strong id="nickname">16</strong>
+          </div>
+          <div>
+            <small>出生日期</small>
+            <strong id="birthDate">待填写</strong>
+          </div>
+        </div>
+      </div>
+      <div class="hero-photo-wrap">
+        <img id="heroPhoto" class="hero-photo" src="images/cover.svg" alt="16 的照片占位图" />
+        <div class="sticker sticker-one">慢慢长大</div>
+        <div class="sticker sticker-two">被爱收藏</div>
+      </div>
+    </section>
+
+    <section class="section intro-section">
+      <div class="section-heading centered">
+        <p class="eyebrow">a growing memory book</p>
+        <h2>一本会长大的电子相册</h2>
+        <p>不用很复杂，只要把重要的小事认真放进去。等 16 长大以后，这里会变成一份很温柔的礼物。</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature-card">
+          <span>📷</span>
+          <h3>照片</h3>
+          <p>按主题收藏日常、生日、旅行和家人合照。</p>
+        </article>
+        <article class="feature-card">
+          <span>🌱</span>
+          <h3>成长</h3>
+          <p>记录第一次笑、第一次走路、第一次说话。</p>
+        </article>
+        <article class="feature-card">
+          <span>💌</span>
+          <h3>留言</h3>
+          <p>把家人写给 16 的话放在同一个地方。</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section timeline-section" id="timeline">
+      <div class="section-heading">
+        <p class="eyebrow">timeline</p>
+        <h2>成长时间线</h2>
+        <p>从出生那天开始，所有小小的第一次，都值得认真记下来。</p>
+      </div>
+      <div class="timeline" id="timelineList"></div>
+    </section>
+
+    <section class="section album-section" id="album">
+      <div class="section-heading">
+        <p class="eyebrow">photo album</p>
+        <h2>照片相册</h2>
+        <p>现在先放占位图。后续把 images 文件夹里的图片替换成真实照片即可。</p>
+      </div>
+      <div class="album-grid" id="albumGrid"></div>
+    </section>
+
+    <section class="section birthday-section" id="birthday">
+      <div class="birthday-card" id="birthdayCard"></div>
+    </section>
+
+    <section class="section messages-section" id="messages">
+      <div class="section-heading centered">
+        <p class="eyebrow">family messages</p>
+        <h2>写给 16 的话</h2>
+        <p>希望这些话，未来的 16 也能读到。</p>
+      </div>
+      <div class="message-grid" id="messageGrid"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> hello16 · 曾洲宁的成长记录</p>
+    <p>只给家人查看，请不要公开传播孩子照片。</p>
+  </footer>
+
+  <dialog class="photo-dialog" id="photoDialog">
+    <button class="dialog-close" id="dialogClose" type="button" aria-label="关闭照片预览">×</button>
+    <img id="dialogImage" src="" alt="照片预览" />
+    <p id="dialogCaption"></p>
+  </dialog>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
