@@ -1,6 +1,6 @@
 # hello16｜曾洲宁的成长记录网站
 
-这是一个温柔、可爱、简洁的静态网站模板，适合记录 16 的成长、照片、生日和家人留言。
+这是一个温柔、可爱、简洁的静态网站，适合记录 16 的成长照片和家人留言。
 
 ## 直接预览
 
@@ -29,19 +29,20 @@ passcode: "只有家人知道的口令",
 
 ## 怎么替换照片
 
-把真实照片放入 `images` 文件夹，然后在 `config.js` 里替换图片路径。
+把真实照片放入 `images` 文件夹，然后在 `config.js` 里更新 `heroPhoto` 和 `photos`。
 
 例如：
 
 ```js
-heroPhoto: "images/cover.jpg"
+heroPhoto: "images/day-01.jpg",
+photos: [
+  "images/day-01.jpg",
+  "images/day-02.jpg",
+  "images/day-03.jpg"
+]
 ```
 
-相册里也可以改成：
-
-```js
-photos: ["images/day-01.jpg", "images/day-02.jpg"]
-```
+相册会直接展示照片，不需要为每张照片写描述。
 
 ## 隐私建议
 

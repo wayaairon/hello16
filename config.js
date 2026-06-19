@@ -12,57 +12,44 @@ window.HELLO16_CONFIG = {
   // 这是前端展示用的简单访问口令，不是真正安全的服务器密码。
   // 正式上线时建议改成只有家人知道的口令，并配合平台访问保护。
   passcode: "hello16",
-  heroPhoto: "images/cover.svg",
-  timeline: [
-    {
-      date: "出生那天",
-      title: "你好呀，16",
-      text: "曾洲宁小朋友来到这个世界，从这一天开始，家里多了一颗软乎乎的小星星。",
-      image: "images/photo-01.svg"
-    },
-    {
-      date: "满月",
-      title: "第一次认真看世界",
-      text: "小小的脸、亮亮的眼睛，像是在慢慢认识身边所有爱他的人。",
-      image: "images/photo-02.svg"
-    },
-    {
-      date: "百天",
-      title: "笑容开始变多",
-      text: "每一次笑都像礼物，让大人们忍不住一遍遍回看照片。",
-      image: "images/photo-03.svg"
-    },
-    {
-      date: "第一岁",
-      title: "一点点长大",
-      text: "会表达喜欢，也会表达不开心，16 正在用自己的方式探索世界。",
-      image: "images/photo-04.svg"
-    }
-  ],
-  albums: [
-    {
-      name: "日常可爱",
-      cover: "images/photo-05.svg",
-      photos: ["images/photo-05.svg", "images/photo-06.svg", "images/photo-07.svg"]
-    },
-    {
-      name: "生日记录",
-      cover: "images/photo-08.svg",
-      photos: ["images/photo-08.svg", "images/photo-09.svg", "images/photo-10.svg"]
-    },
-    {
-      name: "和家人在一起",
-      cover: "images/photo-11.svg",
-      photos: ["images/photo-11.svg", "images/photo-12.svg", "images/photo-13.svg"]
-    }
-  ],
-  birthdays: [
-    {
-      age: "第 1 年",
-      title: "写给 16 的第一封小信",
-      text: "愿你健康、自由、被爱包围。愿你慢慢长大，也愿我们把你每一个闪闪发光的瞬间都好好记住。",
-      image: "images/birthday.svg"
-    }
+  heroPhoto: "images/微信图片_20260619181014_37_2.jpg",
+  photos: [
+    "images/微信图片_20260619181014_37_2.jpg",
+    "images/微信图片_20260619181015_38_2.jpg",
+    "images/微信图片_20260619181016_39_2.jpg",
+    "images/微信图片_20260619181017_40_2.jpg",
+    "images/微信图片_20260619181017_41_2.jpg",
+    "images/微信图片_20260619181018_42_2.jpg",
+    "images/微信图片_20260619181019_43_2.jpg",
+    "images/微信图片_20260619181020_44_2.jpg",
+    "images/微信图片_20260619181021_45_2.jpg",
+    "images/微信图片_20260619181022_46_2.jpg",
+    "images/微信图片_20260619181023_47_2.jpg",
+    "images/微信图片_20260619181024_48_2.jpg",
+    "images/微信图片_20260619181025_49_2.jpg",
+    "images/微信图片_20260619181027_50_2.jpg",
+    "images/微信图片_20260619181029_51_2.jpg",
+    "images/微信图片_20260619181030_52_2.jpg",
+    "images/微信图片_20260619181032_53_2.jpg",
+    "images/微信图片_20260619181034_54_2.jpg",
+    "images/微信图片_20260619181035_55_2.jpg",
+    "images/微信图片_20260619181037_56_2.jpg",
+    "images/微信图片_20260619181039_57_2.jpg",
+    "images/微信图片_20260619181041_58_2.jpg",
+    "images/微信图片_20260619181042_59_2.jpg",
+    "images/微信图片_20260619181044_60_2.jpg",
+    "images/微信图片_20260619181045_61_2.jpg",
+    "images/微信图片_20260619181047_62_2.jpg",
+    "images/微信图片_20260619181048_63_2.jpg",
+    "images/微信图片_20260619181050_64_2.jpg",
+    "images/微信图片_20260619181052_65_2.jpg",
+    "images/微信图片_20260619181053_66_2.jpg",
+    "images/微信图片_20260619181055_67_2.jpg",
+    "images/微信图片_20260619181057_68_2.jpg",
+    "images/微信图片_20260619181059_69_2.jpg",
+    "images/微信图片_20260619181101_70_2.jpg",
+    "images/微信图片_20260619181102_71_2.jpg",
+    "images/微信图片_20260619181104_72_2.jpg"
   ],
   messages: [
     {

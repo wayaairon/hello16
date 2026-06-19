@@ -12,12 +12,17 @@ function escapeHtml(value = "") {
     .replaceAll("'", "&#039;");
 }
 
+function hideSection(selector) {
+  const section = $(selector);
+  if (section) section.hidden = true;
+}
+
 function initBasics() {
   document.title = `${config.siteName || "hello16"}｜${config.nickname || "16"} 的成长记录`;
   $("#childName").textContent = config.childName || "曾洲宁";
   $("#nickname").textContent = config.nickname || "16";
   $("#birthDate").textContent = config.birthDate || "";
-  $("#heroPhoto").src = config.heroPhoto || "images/cover.svg";
+  $("#heroPhoto").src = config.heroPhoto || "";
   $("#year").textContent = new Date().getFullYear();
 }
 
@@ -65,7 +70,13 @@ function initDialog() {
 
 function renderTimeline() {
   const list = $("#timelineList");
-  list.innerHTML = (config.timeline || []).map((item, index) => `
+  const items = config.timeline || [];
+  if (!items.length) {
+    hideSection("#timeline");
+    return;
+  }
+
+  list.innerHTML = items.map((item, index) => `
     <article class="timeline-item">
       <div class="timeline-dot">${index + 1}</div>
       <div>
@@ -73,29 +84,36 @@ function renderTimeline() {
         <h3>${escapeHtml(item.title)}</h3>
         <p>${escapeHtml(item.text)}</p>
       </div>
-      <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" data-preview />
+      ${item.image ? `<img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" data-preview />` : ""}
     </article>
   `).join("");
 }
 
 function renderAlbums() {
   const grid = $("#albumGrid");
-  grid.innerHTML = (config.albums || []).map((album) => `
-    <article class="album-card">
-      <img src="${escapeHtml(album.cover)}" alt="${escapeHtml(album.name)}" data-preview />
-      <div class="album-card-body">
-        <h3>${escapeHtml(album.name)}</h3>
-        <div class="mini-photos">
-          ${(album.photos || []).map((photo, idx) => `<img src="${escapeHtml(photo)}" alt="${escapeHtml(album.name)}照片 ${idx + 1}" data-preview />`).join("")}
-        </div>
-      </div>
-    </article>
+  const photos = config.photos || [];
+  if (!photos.length) {
+    hideSection("#album");
+    return;
+  }
+
+  grid.innerHTML = photos.map((photo, index) => `
+    <img
+      class="album-photo"
+      src="${escapeHtml(photo)}"
+      alt="16 的成长照片 ${index + 1}"
+      loading="lazy"
+      data-preview
+    />
   `).join("");
 }
 
 function renderBirthday() {
   const item = (config.birthdays || [])[0];
-  if (!item) return;
+  if (!item) {
+    hideSection("#birthday");
+    return;
+  }
   $("#birthdayCard").innerHTML = `
     <img src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" data-preview />
     <div>
@@ -110,7 +128,13 @@ function renderBirthday() {
 
 function renderMessages() {
   const grid = $("#messageGrid");
-  grid.innerHTML = (config.messages || []).map((message) => `
+  const messages = config.messages || [];
+  if (!messages.length) {
+    hideSection("#messages");
+    return;
+  }
+
+  grid.innerHTML = messages.map((message) => `
     <article class="message-card">
       <p>“${escapeHtml(message.text)}”</p>
       <strong>—— ${escapeHtml(message.from)}</strong>
