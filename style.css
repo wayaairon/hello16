@@ -318,25 +318,127 @@ button:disabled {
   display: grid;
   place-items: center;
   gap: 22px;
-  min-height: 600px;
-  padding: 46px 20px 34px;
+  min-height: 640px;
+  padding: 44px 20px 34px;
   border: 1px solid rgba(255,255,255,0.84);
   border-radius: 34px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.72), rgba(255,243,216,0.72)), repeating-linear-gradient(90deg, rgba(168,132,78,0.05) 0 1px, transparent 1px 26px);
+  background:
+    linear-gradient(135deg, rgba(255,255,255,0.72), rgba(255,243,216,0.72)),
+    repeating-linear-gradient(90deg, rgba(168,132,78,0.05) 0 1px, transparent 1px 26px);
   box-shadow: 0 22px 60px rgba(80, 58, 36, 0.1);
-  perspective: 1800px;
+  perspective: 1900px;
   overflow: hidden;
 }
-.flipbook-book { position: relative; width: min(560px, 86vw); aspect-ratio: 4 / 3; cursor: pointer; outline: none; transform-style: preserve-3d; }
-.flipbook-book:focus-visible { box-shadow: 0 0 0 5px rgba(156,207,240,0.35); border-radius: 26px; }
-.flipbook-book::before { content: ""; position: absolute; inset: 18px auto 18px -14px; width: 28px; border-radius: 18px; background: linear-gradient(90deg, rgba(60,51,45,0.28), rgba(60,51,45,0.02)); transform: translateZ(-20px); }
-.flipbook-leaf { position: absolute; inset: 0; transform-origin: left center; transform-style: preserve-3d; transition: transform 0.82s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s ease; }
-.flipbook-leaf.is-flipped { transform: rotateY(-180deg); }
-.flipbook-face { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; border: 1px solid rgba(60,51,45,0.08); border-radius: 26px; background: #fffaf0; box-shadow: 0 18px 44px rgba(80,58,36,0.16); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-.flipbook-back { transform: rotateY(180deg); }
+.flipbook-book {
+  position: relative;
+  width: min(920px, 92vw);
+  aspect-ratio: 16 / 9.8;
+  outline: none;
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 24px 34px rgba(80,58,36,0.16));
+}
+.flipbook-spread {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  transform: rotateX(3deg);
+  transform-style: preserve-3d;
+}
+.flipbook-panel,
+.flipbook-turn-page {
+  position: relative;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  transform-style: preserve-3d;
+}
+.flipbook-panel-left { transform-origin: right center; }
+.flipbook-panel-right { transform-origin: left center; }
+.flipbook-panel-left .flipbook-face { border-radius: 24px 8px 8px 24px; }
+.flipbook-panel-right .flipbook-face { border-radius: 8px 24px 24px 8px; }
+.flipbook-panel:disabled { cursor: default; }
+.flipbook-panel:focus-visible .flipbook-face { box-shadow: inset 0 0 0 3px rgba(156,207,240,0.55), 0 18px 44px rgba(80,58,36,0.14); }
+.flipbook-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(60,51,45,0.08);
+  background: #fffaf0;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.62), 0 18px 44px rgba(80,58,36,0.14);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.flipbook-face-left::after,
+.flipbook-face-right::after,
+.flipbook-turn-front::after,
+.flipbook-turn-back::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.flipbook-face-left::after,
+.flipbook-turn-back::after {
+  background: linear-gradient(90deg, transparent 72%, rgba(60,51,45,0.16));
+}
+.flipbook-face-right::after,
+.flipbook-turn-front::after {
+  background: linear-gradient(90deg, rgba(60,51,45,0.13), transparent 24%);
+}
+.flipbook-gutter {
+  position: absolute;
+  top: 2%;
+  bottom: 2%;
+  left: calc(50% - 11px);
+  width: 22px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(60,51,45,0.2), rgba(255,255,255,0.72), rgba(60,51,45,0.22));
+  box-shadow: 0 0 22px rgba(60,51,45,0.18);
+  pointer-events: none;
+  z-index: 18;
+}
+.flipbook-turn-page {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 30;
+}
+.flipbook-turn-page .flipbook-face { border-radius: 8px 24px 24px 8px; }
+.flipbook-turn-page.is-forward {
+  left: 50%;
+  opacity: 1;
+  transform-origin: left center;
+  animation: flipForward 0.86s cubic-bezier(.2,.72,.2,1) forwards;
+}
+.flipbook-turn-page.is-backward {
+  left: 0;
+  opacity: 1;
+  transform-origin: right center;
+  animation: flipBackward 0.86s cubic-bezier(.2,.72,.2,1) forwards;
+}
+.flipbook-turn-page.is-backward .flipbook-face { border-radius: 24px 8px 8px 24px; }
+.flipbook-turn-back { transform: rotateY(180deg); }
 .flipbook-image { width: 100%; height: 100%; object-fit: cover; }
-.flipbook-page::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(60,51,45,0.12), transparent 18%, transparent 84%, rgba(255,255,255,0.28)); }
-.flipbook-cover-text { position: absolute; inset: auto 26px 26px; display: grid; gap: 6px; padding: 18px 20px; border-radius: 22px; background: rgba(255,250,240,0.82); color: var(--ink); box-shadow: 0 12px 34px rgba(80,58,36,0.16); }
+.flipbook-cover-text {
+  position: absolute;
+  inset: auto 26px 26px;
+  display: grid;
+  gap: 6px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  background: rgba(255,250,240,0.82);
+  color: var(--ink);
+  box-shadow: 0 12px 34px rgba(80,58,36,0.16);
+}
 .flipbook-cover-text span { color: #a8844e; font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; }
 .flipbook-cover-text strong { font-size: clamp(28px, 5vw, 44px); font-family: "Ma Shan Zheng", cursive; font-weight: 400; }
 .flipbook-ending { gap: 10px; color: var(--ink); text-align: center; }
@@ -345,6 +447,18 @@ button:disabled {
 .flipbook-controls { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 .flipbook-control { min-height: 42px; border: 1px solid rgba(60,51,45,0.1); border-radius: 999px; padding: 0 16px; background: rgba(255,255,255,0.78); color: var(--ink); font-weight: 800; cursor: pointer; }
 .flipbook-control:hover, .flipbook-control[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.flipbook-control:disabled { cursor: default; opacity: 0.42; }
+
+@keyframes flipForward {
+  0% { transform: rotateY(0deg) translateZ(8px); box-shadow: -10px 12px 24px rgba(80,58,36,0.12); }
+  48% { transform: rotateY(-92deg) translateZ(26px); box-shadow: -26px 18px 36px rgba(80,58,36,0.18); }
+  100% { transform: rotateY(-180deg) translateZ(8px); box-shadow: -10px 12px 24px rgba(80,58,36,0.1); }
+}
+@keyframes flipBackward {
+  0% { transform: rotateY(0deg) translateZ(8px); box-shadow: 10px 12px 24px rgba(80,58,36,0.12); }
+  48% { transform: rotateY(92deg) translateZ(26px); box-shadow: 26px 18px 36px rgba(80,58,36,0.18); }
+  100% { transform: rotateY(180deg) translateZ(8px); box-shadow: 10px 12px 24px rgba(80,58,36,0.1); }
+}
 .video-grid {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
@@ -533,8 +647,9 @@ button:disabled {
   .lock-row { flex-direction: column; }
   .lock-row button { min-height: 48px; }
   .section { padding: 56px 0; }
-  .flipbook-stage { min-height: 470px; padding: 32px 12px 24px; }
-  .flipbook-book { width: min(360px, 84vw); }
+  .flipbook-stage { min-height: 370px; padding: 30px 10px 22px; }
+  .flipbook-book { width: min(640px, 92vw); }
+  .flipbook-cover-text { inset: auto 12px 12px; padding: 12px 14px; }
   .flipbook-control { flex: 1 1 86px; }
   .hero h1 { font-size: 84px; }
 }

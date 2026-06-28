@@ -5,6 +5,15 @@ const IMAGE_QUALITY = 0.82;
 
 let uploadedPhotos = [];
 let visitorMessages = [];
+let flipbookPages = [];
+let flipbookSpread = 0;
+let flipbookSpreadCount = 0;
+let flipbookIsTurning = false;
+let musicContext = null;
+let musicGain = null;
+let musicTimer = null;
+let musicStep = 0;
+let musicIsPlaying = false;
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => Array.from(document.querySelectorAll(selector));
@@ -176,13 +185,32 @@ function renderFlipbookImage(src, altText, extraClass = "") {
   `;
 }
 
-function renderFlipbookFace(face, sideClass) {
-  const classes = `flipbook-face ${sideClass} ${face.cover ? "flipbook-cover" : "flipbook-page"}`;
+function buildFlipbookPages() {
+  const album = config.flipAlbum || {};
+  const photos = (album.pages || []).filter(Boolean);
+  if (!photos.length) return [];
 
-  if (face.cover) {
+  const pages = [
+    { type: "cover", src: album.cover || photos[0], alt: "16 的翻页相册封面" },
+    ...photos.map((src, index) => ({
+      type: "photo",
+      src,
+      alt: `16 的成长照片 ${index + 1}`
+    }))
+  ];
+
+  if (pages.length % 2 !== 0) pages.push({ type: "ending" });
+  return pages;
+}
+
+function renderFlipbookFace(page = {}, sideClass = "") {
+  const type = page.type || (page.src ? "photo" : "blank");
+  const classes = `flipbook-face ${sideClass} flipbook-${type}`;
+
+  if (type === "cover") {
     return `
       <div class="${classes}">
-        ${renderFlipbookImage(face.src, "16 的翻页相册封面", "cover-image")}
+        ${renderFlipbookImage(page.src, page.alt || "16 的翻页相册封面", "cover-image")}
         <div class="flipbook-cover-text">
           <span>hello16</span>
           <strong>16 的成长相册</strong>
@@ -191,7 +219,7 @@ function renderFlipbookFace(face, sideClass) {
     `;
   }
 
-  if (!face.src) {
+  if (type === "ending" || type === "blank" || !page.src) {
     return `
       <div class="${classes} flipbook-ending">
         <span>hello16</span>
@@ -202,8 +230,43 @@ function renderFlipbookFace(face, sideClass) {
 
   return `
     <div class="${classes}">
-      ${renderFlipbookImage(face.src, face.alt || "16 的成长照片")}
+      ${renderFlipbookImage(page.src, page.alt || "16 的成长照片")}
     </div>
+  `;
+}
+
+function renderFlipbookPanel(page, side) {
+  const action = side === "left" ? "prev" : "next";
+  const label = side === "left" ? "往前翻一页" : "往后翻一页";
+  const disabled = flipbookIsTurning ||
+    (side === "left" && flipbookSpread <= 0) ||
+    (side === "right" && flipbookSpread >= flipbookSpreadCount - 1);
+
+  return `
+    <button class="flipbook-panel flipbook-panel-${side}" type="button" data-flipbook-action="${action}" aria-label="${label}"${disabled ? " disabled" : ""}>
+      ${renderFlipbookFace(page, `flipbook-face-${side}`)}
+    </button>
+  `;
+}
+
+function renderFlipbookSpread(leftPage, rightPage) {
+  const spread = $("#flipbookSpread");
+  if (!spread) return;
+
+  spread.innerHTML = `
+    ${renderFlipbookPanel(leftPage || { type: "blank" }, "left")}
+    ${renderFlipbookPanel(rightPage || { type: "blank" }, "right")}
+  `;
+}
+
+function renderFlipbookTurnPage(frontPage, backPage, direction) {
+  const turnPage = $("#flipbookTurnPage");
+  if (!turnPage) return;
+
+  turnPage.className = `flipbook-turn-page is-${direction > 0 ? "forward" : "backward"}`;
+  turnPage.innerHTML = `
+    ${renderFlipbookFace(frontPage || { type: "blank" }, "flipbook-turn-front")}
+    ${renderFlipbookFace(backPage || { type: "blank" }, "flipbook-turn-back")}
   `;
 }
 
@@ -211,65 +274,83 @@ function renderFlipAlbum() {
   const book = $("#flipbookBook");
   if (!book) return;
 
-  const album = config.flipAlbum || {};
-  const pages = album.pages || [];
-  if (!pages.length) {
+  flipbookPages = buildFlipbookPages();
+  if (!flipbookPages.length) {
     hideSection("#flipAlbum");
     return;
   }
 
-  const leaves = [
-    {
-      front: { src: album.cover || pages[0], cover: true },
-      back: { src: pages[0], alt: "16 的成长照片 1" }
-    }
-  ];
-
-  for (let index = 1; index < pages.length; index += 2) {
-    leaves.push({
-      front: { src: pages[index], alt: `16 的成长照片 ${index + 1}` },
-      back: pages[index + 1]
-        ? { src: pages[index + 1], alt: `16 的成长照片 ${index + 2}` }
-        : { src: "" }
-    });
-  }
-
-  flipbookPage = 0;
-  flipbookLeafCount = leaves.length;
-  book.innerHTML = leaves.map((leaf, index) => `
-    <div class="flipbook-leaf" style="z-index: ${leaves.length - index}">
-      ${renderFlipbookFace(leaf.front, "flipbook-front")}
-      ${renderFlipbookFace(leaf.back, "flipbook-back")}
-    </div>
-  `).join("");
+  flipbookSpread = 0;
+  flipbookSpreadCount = Math.ceil(flipbookPages.length / 2);
+  book.innerHTML = `
+    <div class="flipbook-spread" id="flipbookSpread"></div>
+    <div class="flipbook-gutter" aria-hidden="true"></div>
+    <div class="flipbook-turn-page" id="flipbookTurnPage" aria-hidden="true"></div>
+  `;
   updateFlipbook();
 }
 
 function updateFlipbook() {
-  const leaves = $$(".flipbook-leaf");
-  leaves.forEach((leaf, index) => {
-    const isFlipped = index < flipbookPage;
-    leaf.classList.toggle("is-flipped", isFlipped);
-    leaf.style.zIndex = isFlipped ? index + 1 : leaves.length - index + 2;
-  });
+  const leftPage = flipbookPages[flipbookSpread * 2] || { type: "blank" };
+  const rightPage = flipbookPages[flipbookSpread * 2 + 1] || { type: "blank" };
+  renderFlipbookSpread(leftPage, rightPage);
 
-  const musicButton = $("#flipbookMusic");
-  if (musicButton) musicButton.setAttribute("aria-pressed", String(musicIsPlaying));
+  const prevButton = $("#flipbookPrev");
+  const nextButton = $("#flipbookNext");
+  if (prevButton) prevButton.disabled = flipbookIsTurning || flipbookSpread <= 0;
+  if (nextButton) nextButton.disabled = flipbookIsTurning || flipbookSpread >= flipbookSpreadCount - 1;
+
+  syncFlipbookMusicButton();
 }
 
-function turnFlipbook(step = 1) {
-  if (!flipbookLeafCount) return;
-  const nextPage = flipbookPage + step;
+function completeFlipbookTurn(nextSpread) {
+  flipbookSpread = nextSpread;
+  flipbookIsTurning = false;
 
-  if (nextPage < 0) {
-    flipbookPage = 0;
-  } else if (nextPage > flipbookLeafCount) {
-    flipbookPage = 0;
+  const turnPage = $("#flipbookTurnPage");
+  if (turnPage) {
+    turnPage.className = "flipbook-turn-page";
+    turnPage.innerHTML = "";
+  }
+  updateFlipbook();
+}
+
+function turnFlipbook(direction = 1) {
+  if (!flipbookSpreadCount || flipbookIsTurning) return;
+
+  const nextSpread = flipbookSpread + direction;
+  if (nextSpread < 0 || nextSpread >= flipbookSpreadCount) return;
+
+  const currentLeft = flipbookPages[flipbookSpread * 2] || { type: "blank" };
+  const currentRight = flipbookPages[flipbookSpread * 2 + 1] || { type: "blank" };
+  const nextLeft = flipbookPages[nextSpread * 2] || { type: "blank" };
+  const nextRight = flipbookPages[nextSpread * 2 + 1] || { type: "blank" };
+
+  flipbookIsTurning = true;
+
+  if (direction > 0) {
+    renderFlipbookSpread(currentLeft, nextRight);
+    renderFlipbookTurnPage(currentRight, nextLeft, direction);
   } else {
-    flipbookPage = nextPage;
+    renderFlipbookSpread(nextLeft, currentRight);
+    renderFlipbookTurnPage(currentLeft, nextRight, direction);
   }
 
-  updateFlipbook();
+  updateFlipbookControlsDuringTurn();
+  if ((config.flipAlbum || {}).music && !musicIsPlaying) startFlipbookMusic();
+  window.setTimeout(() => completeFlipbookTurn(nextSpread), 860);
+}
+
+function updateFlipbookControlsDuringTurn() {
+  const prevButton = $("#flipbookPrev");
+  const nextButton = $("#flipbookNext");
+  if (prevButton) prevButton.disabled = true;
+  if (nextButton) nextButton.disabled = true;
+}
+
+function syncFlipbookMusicButton() {
+  const musicButton = $("#flipbookMusic");
+  if (musicButton) musicButton.setAttribute("aria-pressed", String(musicIsPlaying));
 }
 
 function playMusicNote() {
@@ -310,14 +391,16 @@ function startFlipbookMusic() {
   playMusicNote();
   musicTimer = window.setInterval(playMusicNote, 950);
   musicIsPlaying = true;
-  updateFlipbook();
+  if (flipbookIsTurning) syncFlipbookMusicButton();
+  else updateFlipbook();
 }
 
 function stopFlipbookMusic() {
   if (musicTimer) window.clearInterval(musicTimer);
   musicTimer = null;
   musicIsPlaying = false;
-  updateFlipbook();
+  if (flipbookIsTurning) syncFlipbookMusicButton();
+  else updateFlipbook();
 }
 
 function toggleFlipbookMusic() {
@@ -332,15 +415,20 @@ function initFlipAlbum() {
   const book = $("#flipbookBook");
   if (!book) return;
 
-  book.addEventListener("click", () => {
-    turnFlipbook(1);
-    if ((config.flipAlbum || {}).music && !musicIsPlaying) startFlipbookMusic();
+  book.addEventListener("click", (event) => {
+    const panel = event.target.closest("[data-flipbook-action]");
+    if (!panel) return;
+    turnFlipbook(panel.dataset.flipbookAction === "prev" ? -1 : 1);
   });
+
   book.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" || event.key === " ") {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      turnFlipbook(-1);
+    }
+    if (event.key === "ArrowRight") {
       event.preventDefault();
       turnFlipbook(1);
-      if ((config.flipAlbum || {}).music && !musicIsPlaying) startFlipbookMusic();
     }
   });
 
