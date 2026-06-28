@@ -36,6 +36,7 @@
     <nav class="nav" id="nav">
       <a href="#album">16 的成长相册</a>
       <a href="#photoUpload">上传照片</a>
+      <a href="#flipAlbum">3D 相册</a>
       <a href="#videos">成长视频</a>
       <a href="#messages">家人留言</a>
     </nav>
@@ -102,6 +103,21 @@
         <p class="form-status" id="photoUploadStatus" aria-live="polite"></p>
       </form>
       <div class="album-grid" id="albumGrid"></div>
+    </section>
+
+    <section class="section flipbook-section" id="flipAlbum">
+      <div class="section-heading centered">
+        <p class="eyebrow">3d album</p>
+        <h2>16 的翻页相册</h2>
+      </div>
+      <div class="flipbook-stage">
+        <div class="flipbook-book" id="flipbookBook" role="button" tabindex="0" aria-label="翻看 16 的 3D 相册"></div>
+        <div class="flipbook-controls" aria-label="相册控制">
+          <button class="flipbook-control" id="flipbookPrev" type="button" aria-label="上一页">上一页</button>
+          <button class="flipbook-control music" id="flipbookMusic" type="button" aria-pressed="false">音乐</button>
+          <button class="flipbook-control" id="flipbookNext" type="button" aria-label="下一页">下一页</button>
+        </div>
+      </div>
     </section>
 
     <section class="section video-section" id="videos">

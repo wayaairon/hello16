@@ -44,6 +44,20 @@ photos: [
 
 相册会直接展示照片，不需要为每张照片写描述。
 
+## 怎么配置 3D 翻页相册
+
+主要改 `config.js` 里的 `flipAlbum`。
+
+```js
+flipAlbum: {
+  cover: "images/cover.jpg",
+  music: true,
+  pages: ["images/day-01.jpg", "images/day-02.jpg"]
+}
+```
+
+`cover` 是封面，`pages` 是从图片里挑出来放进翻页相册的照片，`music` 控制是否启用背景音乐。
+
 ## 怎么添加视频
 
 把视频放入 `videos` 文件夹，然后在 `config.js` 里更新 `videos`。

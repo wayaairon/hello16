@@ -313,6 +313,38 @@ button:disabled {
 .album-card h3 { margin: 0 0 16px; font-size: 24px; }
 .mini-photos { display: flex; gap: 8px; }
 .mini-photos img { width: 52px; height: 52px; border-radius: 14px; object-fit: cover; cursor: zoom-in; }
+.flipbook-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  gap: 22px;
+  min-height: 600px;
+  padding: 46px 20px 34px;
+  border: 1px solid rgba(255,255,255,0.84);
+  border-radius: 34px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.72), rgba(255,243,216,0.72)), repeating-linear-gradient(90deg, rgba(168,132,78,0.05) 0 1px, transparent 1px 26px);
+  box-shadow: 0 22px 60px rgba(80, 58, 36, 0.1);
+  perspective: 1800px;
+  overflow: hidden;
+}
+.flipbook-book { position: relative; width: min(560px, 86vw); aspect-ratio: 4 / 3; cursor: pointer; outline: none; transform-style: preserve-3d; }
+.flipbook-book:focus-visible { box-shadow: 0 0 0 5px rgba(156,207,240,0.35); border-radius: 26px; }
+.flipbook-book::before { content: ""; position: absolute; inset: 18px auto 18px -14px; width: 28px; border-radius: 18px; background: linear-gradient(90deg, rgba(60,51,45,0.28), rgba(60,51,45,0.02)); transform: translateZ(-20px); }
+.flipbook-leaf { position: absolute; inset: 0; transform-origin: left center; transform-style: preserve-3d; transition: transform 0.82s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s ease; }
+.flipbook-leaf.is-flipped { transform: rotateY(-180deg); }
+.flipbook-face { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; border: 1px solid rgba(60,51,45,0.08); border-radius: 26px; background: #fffaf0; box-shadow: 0 18px 44px rgba(80,58,36,0.16); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.flipbook-back { transform: rotateY(180deg); }
+.flipbook-image { width: 100%; height: 100%; object-fit: cover; }
+.flipbook-page::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(60,51,45,0.12), transparent 18%, transparent 84%, rgba(255,255,255,0.28)); }
+.flipbook-cover-text { position: absolute; inset: auto 26px 26px; display: grid; gap: 6px; padding: 18px 20px; border-radius: 22px; background: rgba(255,250,240,0.82); color: var(--ink); box-shadow: 0 12px 34px rgba(80,58,36,0.16); }
+.flipbook-cover-text span { color: #a8844e; font-size: 12px; font-weight: 800; letter-spacing: 0.2em; text-transform: uppercase; }
+.flipbook-cover-text strong { font-size: clamp(28px, 5vw, 44px); font-family: "Ma Shan Zheng", cursive; font-weight: 400; }
+.flipbook-ending { gap: 10px; color: var(--ink); text-align: center; }
+.flipbook-ending span { color: #a8844e; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
+.flipbook-ending strong { font-size: clamp(34px, 6vw, 62px); font-family: "Ma Shan Zheng", cursive; font-weight: 400; }
+.flipbook-controls { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+.flipbook-control { min-height: 42px; border: 1px solid rgba(60,51,45,0.1); border-radius: 999px; padding: 0 16px; background: rgba(255,255,255,0.78); color: var(--ink); font-weight: 800; cursor: pointer; }
+.flipbook-control:hover, .flipbook-control[aria-pressed="true"] { background: var(--ink); color: #fff; }
 .video-grid {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
 }
@@ -501,5 +533,8 @@ button:disabled {
   .lock-row { flex-direction: column; }
   .lock-row button { min-height: 48px; }
   .section { padding: 56px 0; }
+  .flipbook-stage { min-height: 470px; padding: 32px 12px 24px; }
+  .flipbook-book { width: min(360px, 84vw); }
+  .flipbook-control { flex: 1 1 86px; }
   .hero h1 { font-size: 84px; }
 }

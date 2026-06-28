@@ -165,6 +165,190 @@ function renderVideos() {
   }).join("");
 }
 
+function renderFlipbookImage(src, altText, extraClass = "") {
+  return `
+    <img
+      class="flipbook-image ${extraClass}"
+      src="${escapeHtml(src)}"
+      alt="${escapeHtml(altText)}"
+      loading="lazy"
+    />
+  `;
+}
+
+function renderFlipbookFace(face, sideClass) {
+  const classes = `flipbook-face ${sideClass} ${face.cover ? "flipbook-cover" : "flipbook-page"}`;
+
+  if (face.cover) {
+    return `
+      <div class="${classes}">
+        ${renderFlipbookImage(face.src, "16 的翻页相册封面", "cover-image")}
+        <div class="flipbook-cover-text">
+          <span>hello16</span>
+          <strong>16 的成长相册</strong>
+        </div>
+      </div>
+    `;
+  }
+
+  if (!face.src) {
+    return `
+      <div class="${classes} flipbook-ending">
+        <span>hello16</span>
+        <strong>慢慢长大</strong>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="${classes}">
+      ${renderFlipbookImage(face.src, face.alt || "16 的成长照片")}
+    </div>
+  `;
+}
+
+function renderFlipAlbum() {
+  const book = $("#flipbookBook");
+  if (!book) return;
+
+  const album = config.flipAlbum || {};
+  const pages = album.pages || [];
+  if (!pages.length) {
+    hideSection("#flipAlbum");
+    return;
+  }
+
+  const leaves = [
+    {
+      front: { src: album.cover || pages[0], cover: true },
+      back: { src: pages[0], alt: "16 的成长照片 1" }
+    }
+  ];
+
+  for (let index = 1; index < pages.length; index += 2) {
+    leaves.push({
+      front: { src: pages[index], alt: `16 的成长照片 ${index + 1}` },
+      back: pages[index + 1]
+        ? { src: pages[index + 1], alt: `16 的成长照片 ${index + 2}` }
+        : { src: "" }
+    });
+  }
+
+  flipbookPage = 0;
+  flipbookLeafCount = leaves.length;
+  book.innerHTML = leaves.map((leaf, index) => `
+    <div class="flipbook-leaf" style="z-index: ${leaves.length - index}">
+      ${renderFlipbookFace(leaf.front, "flipbook-front")}
+      ${renderFlipbookFace(leaf.back, "flipbook-back")}
+    </div>
+  `).join("");
+  updateFlipbook();
+}
+
+function updateFlipbook() {
+  const leaves = $$(".flipbook-leaf");
+  leaves.forEach((leaf, index) => {
+    const isFlipped = index < flipbookPage;
+    leaf.classList.toggle("is-flipped", isFlipped);
+    leaf.style.zIndex = isFlipped ? index + 1 : leaves.length - index + 2;
+  });
+
+  const musicButton = $("#flipbookMusic");
+  if (musicButton) musicButton.setAttribute("aria-pressed", String(musicIsPlaying));
+}
+
+function turnFlipbook(step = 1) {
+  if (!flipbookLeafCount) return;
+  const nextPage = flipbookPage + step;
+
+  if (nextPage < 0) {
+    flipbookPage = 0;
+  } else if (nextPage > flipbookLeafCount) {
+    flipbookPage = 0;
+  } else {
+    flipbookPage = nextPage;
+  }
+
+  updateFlipbook();
+}
+
+function playMusicNote() {
+  if (!musicContext || !musicGain) return;
+
+  const notes = [261.63, 329.63, 392, 523.25, 392, 329.63];
+  const note = notes[musicStep % notes.length];
+  const now = musicContext.currentTime;
+  const oscillator = musicContext.createOscillator();
+  const gain = musicContext.createGain();
+
+  oscillator.type = "sine";
+  oscillator.frequency.setValueAtTime(note, now);
+  oscillator.connect(gain);
+  gain.connect(musicGain);
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(0.16, now + 0.08);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + 1.6);
+  oscillator.start(now);
+  oscillator.stop(now + 1.7);
+  musicStep += 1;
+}
+
+function startFlipbookMusic() {
+  if (musicIsPlaying || !(config.flipAlbum || {}).music) return;
+
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+
+  if (!musicContext) {
+    musicContext = new AudioContextClass();
+    musicGain = musicContext.createGain();
+    musicGain.gain.value = 0.045;
+    musicGain.connect(musicContext.destination);
+  }
+
+  musicContext.resume();
+  playMusicNote();
+  musicTimer = window.setInterval(playMusicNote, 950);
+  musicIsPlaying = true;
+  updateFlipbook();
+}
+
+function stopFlipbookMusic() {
+  if (musicTimer) window.clearInterval(musicTimer);
+  musicTimer = null;
+  musicIsPlaying = false;
+  updateFlipbook();
+}
+
+function toggleFlipbookMusic() {
+  if (musicIsPlaying) {
+    stopFlipbookMusic();
+    return;
+  }
+  startFlipbookMusic();
+}
+
+function initFlipAlbum() {
+  const book = $("#flipbookBook");
+  if (!book) return;
+
+  book.addEventListener("click", () => {
+    turnFlipbook(1);
+    if ((config.flipAlbum || {}).music && !musicIsPlaying) startFlipbookMusic();
+  });
+  book.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      turnFlipbook(1);
+      if ((config.flipAlbum || {}).music && !musicIsPlaying) startFlipbookMusic();
+    }
+  });
+
+  $("#flipbookPrev")?.addEventListener("click", () => turnFlipbook(-1));
+  $("#flipbookNext")?.addEventListener("click", () => turnFlipbook(1));
+  $("#flipbookMusic")?.addEventListener("click", toggleFlipbookMusic);
+}
+
 function renderBirthday() {
   const item = (config.birthdays || [])[0];
   if (!item) {
@@ -388,6 +572,7 @@ initLock();
 initDialog();
 renderTimeline();
 renderAlbums();
+renderFlipAlbum();
 renderVideos();
 renderBirthday();
 renderMessages();
@@ -395,5 +580,6 @@ loadUploadedPhotos();
 loadVisitorMessages();
 initPhotoClicks();
 initMenu();
+initFlipAlbum();
 initPhotoUpload();
 initMessageForm();

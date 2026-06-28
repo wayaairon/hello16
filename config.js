@@ -76,6 +76,22 @@ window.HELLO16_CONFIG = {
     "videos/1.mp4",
     "videos/2.mp4"
   ],
+  flipAlbum: {
+    cover: "images/47881f69d576fc0f4ab439c8939ba40b.jpg",
+    music: true,
+    pages: [
+      "images/微信图片_20260619181014_37_2.jpg",
+      "images/微信图片_20260619181019_43_2.jpg",
+      "images/微信图片_20260619181024_48_2.jpg",
+      "images/微信图片_20260619181030_52_2.jpg",
+      "images/微信图片_20260619181035_55_2.jpg",
+      "images/微信图片_20260619181042_59_2.jpg",
+      "images/微信图片_20260619181048_63_2.jpg",
+      "images/微信图片_20260619181055_67_2.jpg",
+      "images/微信图片_20260619181102_71_2.jpg",
+      "images/微信图片_20260619185125_82_2.jpg"
+    ]
+  },
   messages: [
     {
       from: "家人",
