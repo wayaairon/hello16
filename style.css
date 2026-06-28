@@ -243,7 +243,7 @@ button:disabled {
   font-weight: 400;
 }
 .section-heading p:not(.eyebrow) { margin: 0; color: var(--muted); line-height: 1.9; font-size: 17px; }
-.album-grid, .message-grid {
+.album-grid, .video-grid, .message-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 18px;
@@ -313,6 +313,23 @@ button:disabled {
 .album-card h3 { margin: 0 0 16px; font-size: 24px; }
 .mini-photos { display: flex; gap: 8px; }
 .mini-photos img { width: 52px; height: 52px; border-radius: 14px; object-fit: cover; cursor: zoom-in; }
+.video-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+.video-card {
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.82);
+  border-radius: var(--radius-lg);
+  background: rgba(255,255,255,0.62);
+  box-shadow: 0 18px 46px rgba(80, 58, 36, 0.08);
+  backdrop-filter: blur(10px);
+}
+.video-card video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  background: #111;
+}
 
 .contribute-panel {
   display: grid;
@@ -455,7 +472,7 @@ button:disabled {
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; margin-top: 58px; gap: 38px; }
   .hero-photo-wrap { max-width: 520px; margin: 0 auto; }
-  .album-grid, .message-grid { grid-template-columns: 1fr; }
+  .album-grid, .video-grid, .message-grid { grid-template-columns: 1fr; }
   .timeline-item { grid-template-columns: 58px 1fr; }
   .timeline-item img { grid-column: 2; width: 100%; height: auto; aspect-ratio: 4 / 3; }
   .birthday-card { grid-template-columns: 1fr; }

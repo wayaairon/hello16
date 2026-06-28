@@ -72,6 +72,10 @@ window.HELLO16_CONFIG = {
     "images/微信图片_20260619185137_92_2.jpg",
     "images/微信图片_20260619185138_93_2.jpg"
   ],
+  videos: [
+    "videos/1.mp4",
+    "videos/2.mp4"
+  ],
   messages: [
     {
       from: "家人",

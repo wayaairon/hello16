@@ -132,6 +132,39 @@ function renderAlbums() {
   `).join("");
 }
 
+function videoType(src = "") {
+  const lower = src.toLowerCase();
+  if (lower.endsWith(".webm")) return "video/webm";
+  if (lower.endsWith(".mov")) return "video/quicktime";
+  return "video/mp4";
+}
+
+function renderVideos() {
+  const grid = $("#videoGrid");
+  if (!grid) return;
+
+  const videos = config.videos || [];
+  if (!videos.length) {
+    hideSection("#videos");
+    return;
+  }
+
+  grid.innerHTML = videos.map((video) => {
+    const item = typeof video === "string" ? { src: video } : video;
+    if (!item.src) return "";
+    const poster = item.poster ? ` poster="${escapeHtml(item.poster)}"` : "";
+
+    return `
+      <article class="video-card">
+        <video controls playsinline preload="metadata"${poster}>
+          <source src="${escapeHtml(item.src)}" type="${videoType(item.src)}" />
+          当前浏览器不支持视频播放。
+        </video>
+      </article>
+    `;
+  }).join("");
+}
+
 function renderBirthday() {
   const item = (config.birthdays || [])[0];
   if (!item) {
@@ -355,6 +388,7 @@ initLock();
 initDialog();
 renderTimeline();
 renderAlbums();
+renderVideos();
 renderBirthday();
 renderMessages();
 loadUploadedPhotos();
